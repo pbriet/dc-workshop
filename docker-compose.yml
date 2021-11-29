@@ -1,0 +1,57 @@
+version: "3.4"
+
+services:
+  mariadb:
+    image: mariadb:10.7.1
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+
+  nodejs:
+    build:
+      context: ./nodejs
+    environment:
+      MYSQL_HOST: mariadb
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+      MYSQL_DATABASE: test
+    depends_on:
+      - mariadb
+    ports:
+      - 8080:3000
+
+  python:
+    build:
+      context: ./python
+    environment:
+      MYSQL_HOST: mariadb
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+      MYSQL_DB: test
+    depends_on:
+      - mariadb
+    ports:
+      - 8081:8080
+
+  portainer:
+    image: portainer/portainer
+    command: --no-auth
+    ports:
+      - "9000:9000"
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+
+  # nodejs2:
+  #   build:
+  #     context: ./nodejs2
+  #   environment:
+  #     MYSQL_HOST: mariadb
+  #     MYSQL_USER: test
+  #     MYSQL_PASSWORD: test
+  #     MYSQL_DATABASE: test
+  #   depends_on:
+  #     - mariadb
+  #   ports:
+  #     - 8082:3000
