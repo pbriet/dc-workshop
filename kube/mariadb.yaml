@@ -1,0 +1,31 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mariadb
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mariadb
+    spec:
+      containers:
+        - name: mariadb
+          image: 'public.ecr.aws/bitnami/mariadb:latest'
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              value: somepassword
+            - name: MARIADB_USER
+              value: user
+            - name: MARIADB_PASSWORD
+              value: password
+            - name: MARIADB_DATABASE
+              value: db
